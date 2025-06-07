@@ -45,13 +45,10 @@ async function createFile() {
 }
 
 async function saveCurrentFile() {
-  if (!currentFile) return alert("No file selected");
-  await fetch(`/api/files/${currentFile}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ content: editor.getValue() }),
-  });
-  alert("File saved!");
+  if (currentFile) {
+    saveFile(currentFile, editor.getValue());
+    alert("File saved!");
+  }
 }
 
 const socket = io();
@@ -89,11 +86,37 @@ require(["vs/editor/editor.main"], function () {
     theme: "vs-dark",
     automaticLayout: true,
   });
+  let debounceTimer;
 
   editor.onDidChangeModelContent(() => {
     const code = editor.getValue();
-    socket.emit("code-change", code);
+
+    // Emit real-time changes to collaborators
+    if (currentFile) {
+      socket.emit("code-change", {
+        filename: currentFile,
+        code: code,
+      });
+
+      // Debounced Auto-Save
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        saveFile(currentFile, code);
+      }, 2000); // 2 seconds after last input
+    }
   });
+
+  function saveFile(filename, content) {
+    fetch(`/api/files/${filename}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content }),
+    }).then(() => {
+      console.log(`Auto-saved ${filename}`);
+    });
+  }
 
   socket.on("code-change", (code) => {
     if (editor.getValue() !== code) {
