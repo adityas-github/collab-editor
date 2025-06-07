@@ -1,19 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Collaborative Code Editor</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="fileSidebar">
+      <div class="file-header">
+        <input type="text" id="newFileInput" placeholder="newfile.js" />
+        <button onclick="createFile()">＋</button>
+      </div>
+      <ul id="fileList"></ul>
+      <button id="saveBtn" onclick="saveCurrentFile()">💾 Save</button>
+    </div>
+
     <div id="editor"></div>
     <div id="chat">
-        <div id="messages"></div>
-        <input type="text" id="messageInput" placeholder="Send message...">
+      <div id="messages"></div>
+      <input type="text" id="messageInput" placeholder="Send message..." />
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://unpkg.com/monaco-editor@0.44.0/min/vs/loader.js"></script>
     <script src="script.js"></script>
-</body>
+  </body>
 </html>

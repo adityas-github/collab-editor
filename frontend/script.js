@@ -1,3 +1,59 @@
+let currentFile = null;
+
+async function loadFiles() {
+  const res = await fetch("/api/files");
+  const files = await res.json();
+  const list = document.getElementById("fileList");
+  list.innerHTML = "";
+  files.forEach((file) => {
+    const li = document.createElement("li");
+    li.textContent = file;
+    li.onclick = () => selectFile(file);
+    list.appendChild(li);
+  });
+}
+async function selectFile(file) {
+  const res = await fetch(`/api/files/${file}`);
+  const content = await res.text();
+  currentFile = file;
+  editor.setValue(content);
+  socket.emit("select-file", file);
+  highlightActiveFile(file);
+}
+
+function highlightActiveFile(name) {
+  const listItems = document.querySelectorAll("#fileList li");
+  listItems.forEach((li) => {
+    if (li.textContent === name) {
+      li.classList.add("active");
+    } else {
+      li.classList.remove("active");
+    }
+  });
+}
+
+async function createFile() {
+  const name = document.getElementById("newFileInput").value.trim();
+  if (!name) return;
+  await fetch(`/api/files/${name}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ content: "" }),
+  });
+  document.getElementById("newFileInput").value = "";
+  loadFiles();
+}
+
+async function saveCurrentFile() {
+  if (!currentFile) return alert("No file selected");
+  await fetch(`/api/files/${currentFile}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ content: editor.getValue() }),
+  });
+  alert("File saved!");
+}
+
 const socket = io();
 const username = prompt("Enter your username:") || "Anonymous";
 socket.emit("set-username", username);
@@ -5,8 +61,29 @@ socket.emit("set-username", username);
 require.config({
   paths: { vs: "https://unpkg.com/monaco-editor@0.44.0/min/vs" },
 });
+// require(["vs/editor/editor.main"], function () {
+//   const editor = monaco.editor.create(document.getElementById("editor"), {
+//     value: "// Start coding...",
+//     language: "javascript",
+//     theme: "vs-dark",
+//     automaticLayout: true,
+//   });
+
+//   editor.onDidChangeModelContent(() => {
+//     const code = editor.getValue();
+//     socket.emit("code-change", code);
+//   });
+
+//   socket.on("code-change", (code) => {
+//     if (editor.getValue() !== code) {
+//       editor.setValue(code);
+//     }
+//   });
+// });
+let editor;
+
 require(["vs/editor/editor.main"], function () {
-  const editor = monaco.editor.create(document.getElementById("editor"), {
+  editor = monaco.editor.create(document.getElementById("editor"), {
     value: "// Start coding...",
     language: "javascript",
     theme: "vs-dark",
@@ -23,6 +100,8 @@ require(["vs/editor/editor.main"], function () {
       editor.setValue(code);
     }
   });
+
+  loadFiles();
 });
 
 const msgInput = document.getElementById("messageInput");
