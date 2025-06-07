@@ -30,17 +30,23 @@ app.get("/api/files/:name", async (req, res) => {
     res.status(404).send("File not found");
   }
 });
-
 app.post("/api/files/:name", async (req, res) => {
   const filePath = path.join(FILES_DIR, req.params.name);
+  const isNewFile = !(await fs.pathExists(filePath));
+
   await fs.writeFile(filePath, req.body.content || "", "utf-8");
   res.sendStatus(200);
-});
 
+  if (isNewFile) {
+    io.emit("file-list-update");
+  }
+});
 app.delete("/api/files/:name", async (req, res) => {
   const filePath = path.join(FILES_DIR, req.params.name);
   await fs.remove(filePath);
   res.sendStatus(200);
+
+  io.emit("file-list-update");
 });
 
 // === Real-time Features ===

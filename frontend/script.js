@@ -133,3 +133,6 @@ function appendChatMessage(msg) {
 socket.on("chat-message", appendChatMessage);
 socket.on("user-joined", appendSystemMessage);
 socket.on("user-left", appendSystemMessage);
+socket.on("file-list-update", () => {
+  loadFiles(); // refresh file list when notified
+});
