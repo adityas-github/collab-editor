@@ -1,0 +1,31 @@
+body {
+    margin: 0;
+    display: flex;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+#editor {
+    width: 75%;
+    height: 100%;
+}
+
+#chat {
+    width: 25%;
+    background: #1e1e1e;
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+#messages {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+#messageInput {
+    padding: 10px;
+    border: none;
+    outline: none;
+}
