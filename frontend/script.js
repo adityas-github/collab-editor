@@ -45,11 +45,12 @@ async function createFile() {
 }
 
 async function saveCurrentFile() {
-  if (currentFile) {
-    saveFile(currentFile, editor.getValue());
-    alert("File saved!");
-  }
+    if (currentFile) {
+        saveFile(currentFile, editor.getValue());
+        alert('File saved!');
+    }
 }
+
 
 const socket = io();
 const username = prompt("Enter your username:") || "Anonymous";
@@ -105,7 +106,7 @@ require(["vs/editor/editor.main"], function () {
       }, 2000); // 2 seconds after last input
     }
   });
-
+  
   function saveFile(filename, content) {
     fetch(`/api/files/${filename}`, {
       method: "POST",
@@ -158,4 +159,7 @@ socket.on("user-joined", appendSystemMessage);
 socket.on("user-left", appendSystemMessage);
 socket.on("file-list-update", () => {
   loadFiles(); // refresh file list when notified
+});
+socket.on('connect', () => {
+    console.log('[Socket] Connected to server');
 });

@@ -1,98 +1,98 @@
 body {
-  margin: 0;
-  display: flex;
-  height: 100vh;
-  font-family: Arial, sans-serif;
+    margin: 0;
+    display: flex;
+    height: 100vh;
+    font-family: Arial, sans-serif;
 }
 
 #editor {
-  width: 75%;
-  height: 100%;
+    width: 75%;
+    height: 100%;
 }
 
 #chat {
-  width: 25%;
-  background: #1e1e1e;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid white;
+    width: 25%;
+    background: #1e1e1e;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid white;
 }
 
 #messages {
-  flex: 1;
-  padding: 10px;
-  overflow-y: auto;
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
 }
 
 #messageInput {
-  padding: 10px;
-  border: none;
-  outline: none;
+    padding: 10px;
+    border: none;
+    outline: none;
 }
 #fileSidebar {
-  width: 220px;
-  background: #1e1e1e;
-  color: white;
-  padding: 10px;
-  overflow-y: auto;
-  border-right: 1px solid #333;
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+    width: 220px;
+    background: #1e1e1e;
+    color: white;
+    padding: 10px;
+    overflow-y: auto;
+    border-right: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 }
 
 .file-header {
-  display: flex;
-  gap: 5px;
-  margin-bottom: 10px;
+    display: flex;
+    gap: 5px;
+    margin-bottom: 10px;
 }
 
 #newFileInput {
-  flex: 1;
-  padding: 5px;
-  background: #2d2d2d;
-  border: 1px solid #555;
-  color: white;
-  border-radius: 4px;
+    flex: 1;
+    padding: 5px;
+    background: #2d2d2d;
+    border: 1px solid #555;
+    color: white;
+    border-radius: 4px;
 }
 
 #fileList {
-  list-style: none;
-  padding: 0;
-  flex: 1;
-  overflow-y: auto;
+    list-style: none;
+    padding: 0;
+    flex: 1;
+    overflow-y: auto;
 }
 
 #fileList li {
-  padding: 6px 10px;
-  margin-bottom: 4px;
-  background: #2b2b2b;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background 0.2s ease;
+    padding: 6px 10px;
+    margin-bottom: 4px;
+    background: #2b2b2b;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s ease;
 }
 
 #fileList li:hover {
-  background: #3a3a3a;
+    background: #3a3a3a;
 }
 
 #fileList li.active {
-  background: #007acc;
-  color: white;
-  font-weight: bold;
+    background: #007acc;
+    color: white;
+    font-weight: bold;
 }
 
 #saveBtn {
-  margin-top: 10px;
-  padding: 6px;
-  background: #007acc;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+    margin-top: 10px;
+    padding: 6px;
+    background: #007acc;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 #saveBtn:hover {
-  background: #005f99;
+    background: #005f99;
 }
