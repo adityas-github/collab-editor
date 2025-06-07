@@ -1,31 +1,43 @@
-const express = require("express");
-const http = require("http");
-const { Server } = require("socket.io");
-const path = require("path");
+const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
+const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-app.use(express.static(path.join(__dirname, "../frontend")));
+app.use(express.static(path.join(__dirname, '../frontend')));
 
-io.on("connection", (socket) => {
-  console.log("A user connected:", socket.id);
+const users = {};
 
-  socket.on("code-change", (data) => {
-    socket.broadcast.emit("code-change", data);
-  });
+io.on('connection', (socket) => {
+    console.log('New connection:', socket.id);
 
-  socket.on("chat-message", (msg) => {
-    io.emit("chat-message", msg);
-  });
+    socket.on('set-username', (username) => {
+        users[socket.id] = username;
+        socket.broadcast.emit('user-joined', `${username} joined the session`);
+    });
 
-  socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
-  });
+    socket.on('code-change', (data) => {
+        socket.broadcast.emit('code-change', data);
+    });
+
+    socket.on('chat-message', (msg) => {
+        const username = users[socket.id] || 'Anonymous';
+        io.emit('chat-message', `${username}: ${msg}`);
+    });
+
+    socket.on('disconnect', () => {
+        const username = users[socket.id];
+        if (username) {
+            socket.broadcast.emit('user-left', `${username} left the session`);
+            delete users[socket.id];
+        }
+    });
 });
 
 const PORT = 3000;
 server.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server running on http://localhost:${PORT}`);
 });
